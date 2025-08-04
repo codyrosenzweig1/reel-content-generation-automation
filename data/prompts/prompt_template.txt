@@ -1,0 +1,112 @@
+⚠️ Return _only_ the JSON object—no extra text.
+
+🎯 TASK:
+Generate a humorous, intuitive dialogue between two characters explaining a university‑level topic.
+
+👥 AUDIENCE:
+University students with minimal prior knowledge but strong curiosity.
+
+📋 GUIDELINES:
+• **Hook & Hook**: Start with something funny and relatable.  
+• **Simple Intro**: Define the topic in plain terms.  
+• **Deep Dive**: Use analogies or examples to explain how/why it works.  
+• **Punchline**: End on a memorable, humorous note.  
+• **Punctuation**:  
+  – Commas `,` for short pauses  
+  – Periods `.` for full stops  
+  – Question marks `?` to raise intonation  
+  – Exclamation points `!` for emphasis  
+  – Ellipses `…` for trailing off  
+  - Don't use '-' to concatinate words like walkie-talkie, rather separate them or use a comma where appropriate
+• **Normalization**:  
+  – Expand “sci‑fi” → “science fiction”  
+  – No `w/` or `b/c`  
+  – Append `.`, `?`, or `!` if missing
+  - You must still use apostrophese if needed; eg it's or Peter's
+  - Always use 'it's' instead of 'it is' 
+
+⏱️ LENGTH:
+10–12 sentences total (≈60 sec). Hard cap 90 sec.
+
+🗂️ FORMAT:
+{
+  "topic": "[TOPIC]",
+  "tone": "[TONE]",         // optional, defaults to \"humorous\"
+  "characters": [
+    { "name": "Peter", "lines": ["Line 1", "Line 3", …] },
+    { "name": "Stewie", "lines": ["Line 2", "Line 4", …] }
+  ]
+}
+
+
+📋 EXAMPLES:
+
+Example 1:
+{
+  "topic": "Photosynthesis",
+  "tone": "humorous",
+  "characters": [
+    {
+      "name": "Peter",
+      "lines": [
+        "Hey Peter, did you know plants literally eat sunlight? Photosynthesis is like their daily brunch routine!"
+      ]
+    },
+    {
+      "name": "Stewie",
+      "lines": [
+        "So plants are solar panels with a side of snacks? How do they even turn light into lunch?"
+      ]
+    },
+    {
+      "name": "Peter",
+      "lines": [
+        "They have these green molecules called chlorophyll in their leaves. They capture sunlight and use it's energy to turn carbon dioxide and water into sugar plant food! It is like a built in solar panel that powers their snack making machine. Plus, they release oxygen as a bonus, which is great for us since breathing is nice."
+      ]
+    },
+    {
+      "name": "Stewie",
+      "lines": [
+        "So plants basically run on sunshine and make our air cleaner? My houseplants still look dead, but at least I know why."
+      ]
+    }
+  ]
+}
+
+Example 2:
+{
+  "topic": "Quantum Entanglement",
+  "tone": "humorous",
+  "characters": [
+    {
+      "name": "Peter",
+      "lines": [
+        "Hey Stewie, ever heard of quantum entanglement? It's like having a twin who instantly feels your paper cuts… even if they are kicking back on Mars!"
+      ]
+    },
+    {
+      "name": "Stewie",
+      "lines": [
+        "Particles texting across galaxies? That sounds like science fiction nonsense. How does that even work, space Wi‑Fi?"
+      ]
+    },
+    {
+      "name": "Peter",
+      "lines": [
+        "Not quite texting. When two particles become entangled, their properties get linked in a weird way. If you measure one particle’s spin or position, you instantly know the other’s—no matter the distance. They’re like cosmic dance partners who always coordinate, even when they are apart. It is not communication though, it's more like they were programmed together from the start."
+      ]
+    },
+    {
+      "name": "Stewie",
+      "lines": [
+        "So it's basically the universe’s weirdest pre‑arranged group project? Great, even subatomic particles have better teamwork than my classmates."
+      ]
+    }
+  ]
+}
+
+🎬 TASK INPUT:  
+Topic: [INSERT TOPIC HERE]  
+Tone: [INSERT TONE HERE, e.g., "humorous"]
+
+— Generate your dialogue now, applying the normalization and punctuation rules above. —
