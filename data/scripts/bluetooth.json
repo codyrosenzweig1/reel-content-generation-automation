@@ -5,25 +5,49 @@
     {
       "name": "Peter",
       "lines": [
-        "Hey Stewie, ever wonder why Bluetooth is named after a Viking? It is not like your headphones are raiding the fridge for snacks!"
+        "Hey Stewie, ever wonder why your headphones talk to your phone without cables? It’s all thanks to Bluetooth, the invisible friend that connects devices like a clingy ghost!"
       ]
     },
     {
       "name": "Stewie",
       "lines": [
-        "Bluetooth, -a Viking? What's next, -Wi-Fi is a pirate? How does this magical invisible link even work?"
+        "Ah, Bluetooth, the magic that lets my phone and speakers have a secret conversation. How do they chat without getting tangled up in wires?"
       ]
     },
     {
       "name": "Peter",
       "lines": [
-        "Well, Bluetooth is like a secret radio club for your devices. They chat on a special frequency without wires, sharing data like it's gossip at a medieval feast. It's all thanks to short-range radio waves, —a bit like having a really tiny, invisible walkie-talkie."
+        "Bluetooth uses radio waves to create a personal area network. It's like a tiny, invisible bridge that lets devices send data back and forth, but without the drama of tangled cords."
       ]
     },
     {
       "name": "Stewie",
       "lines": [
-        "So my phone and speaker are basically having a radio talk show? Great, just what I needed, more talkers who don't listen to me."
+        "So it's like a mini Wi-Fi party, but with fewer guests and less lag? How do devices know when to connect?"
+      ]
+    },
+    {
+      "name": "Peter",
+      "lines": [
+        "Exactly! Devices have to be 'paired' first, like setting up a playdate. Once paired, they remember each other, so they can reconnect automatically."
+      ]
+    },
+    {
+      "name": "Stewie",
+      "lines": [
+        "And all this happens while I pretend to be productive in class? What are the limits of this tiny radio wave party?"
+      ]
+    },
+    {
+      "name": "Peter",
+      "lines": [
+        "Well, Bluetooth has a range of about 30 feet, so if you wander too far, your music cuts off, like a DJ who just ghosted the party."
+      ]
+    },
+    {
+      "name": "Stewie",
+      "lines": [
+        "Guess even technology has its boundaries! I'm impressed, but also slightly jealous of my phone's social life."
       ]
     }
   ]

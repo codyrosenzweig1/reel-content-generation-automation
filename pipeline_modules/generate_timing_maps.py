@@ -75,18 +75,51 @@ def main(script_name: str):
             "text":   line
         })
 
-        # word-level: uniform split
-        words = line.split()
-        per = (end_s - start_s) / len(words)
-        for i, w in enumerate(words):
-            ws = start_s + i*per
-            we = ws + per
+        # word-level with punctuation awareness and proportional timing
+        # Split by whitespace but capture a single trailing punctuation mark if present
+        raw_tokens = line.split()
+        tokens = []  # list of dicts: {w: word, p: punct or ""}
+        for tok in raw_tokens:
+            w = tok.strip()
+            punct = ""
+            if w and w[-1] in ",.?!…":
+                punct = w[-1]
+                w = w[:-1]
+            if w:
+                tokens.append({"w": w, "p": punct})
+
+        if not tokens:
+            tokens = [{"w": line.strip().strip(",.?!…"), "p": "."}]
+
+        # Proportional allocation by word length with small weights for punctuation holds
+        def base_weight(word: str) -> int:
+            return max(1, len(word))
+        P_WEIGHTS = {",": 0.5, ".": 0.8, "?": 0.8, "!": 0.8, "…": 1.0}
+        units = 0.0
+        for t in tokens:
+            units += base_weight(t["w"]) + P_WEIGHTS.get(t["p"], 0.0)
+        span = max(1e-6, (end_s - start_s))
+        per_unit = span / units
+
+        cur = start_s
+        for i, t in enumerate(tokens):
+            w_units = base_weight(t["w"]) * per_unit
+            ws = cur
+            we = ws + w_units
+            # add a small hold for punctuation on this word
+            if t["p"]:
+                we += min(0.18, P_WEIGHTS.get(t["p"], 0.0) * per_unit)
+            # prevent drift past end_s
+            if i == len(tokens) - 1:
+                we = end_s
             word_entries.append({
-                "word": w.strip('.,?!…'),
-                "start": round(ws,3),
-                "end":   round(we,3),
-                "sentence_index": idx
+                "word": t["w"],
+                "start": round(ws, 3),
+                "end": round(we, 3),
+                "sentence_index": idx,
+                "punct": t["p"]
             })
+            cur = we
 
         cursor = end
         idx += 1

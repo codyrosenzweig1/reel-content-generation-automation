@@ -53,14 +53,14 @@ def assemble_reel(
 
         inp   = 2 + unique_speakers.index(spk)       # PNG input index
         sideL = spk.lower() in LEFT_SPKRS
-        x_pos = "20" if sideL else "main_w-overlay_w-20"
+        x_pos = "15" if sideL else "main_w-overlay_w-20"
         label_scale = f"s{idx}"                      # unique
         label_out   = f"v{idx}"
 
         fc_parts.append(
             f"[{inp}:v]scale=iw*0.20:-1[{label_scale}];"
             f"[{last_label}][{label_scale}]overlay="
-            f"x={x_pos}:y=H-h-80:enable='between(t,{start},{end})'"
+            f"x={x_pos}:y=H-h-300:enable='between(t,{start},{end})'"
             f"[{label_out}]"
         )
         last_label = label_out
@@ -69,9 +69,16 @@ def assemble_reel(
         "ffmpeg", "-y",
         *ff_inputs,
         "-filter_complex", ";".join(fc_parts),
-        "-map", f"[{last_label}]", "-map", "1:a",
+        "-map", f"[{last_label}]",
+        "-map", "1:a:0",
+        # Apply integrated loudness normalisation
+        "-af", "loudnorm=I=-14:TP=-1.0:LRA=11",
         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-        "-c:a", "aac",
+        # Ensure audio is broadly compatible (48 kHz stereo AAC)
+        "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2",
+        # Make the MP4 start quickly when streamed
+        "-movflags", "+faststart",
+        "-shortest",
         str(output_mp4)
     ]
 
@@ -83,7 +90,7 @@ if __name__ == "__main__":
     BASE_DIR = Path(__file__).parent.parent.resolve()
 
     assemble_reel(
-        video_mp4 = BASE_DIR / "data/backgrounds/bg_preview.mp4",
+        video_mp4 = BASE_DIR / "data/backgrounds/bg_full.mp4",
         audio_wav = BASE_DIR / "data/final/preview_audio.wav",
         subs_ass  = BASE_DIR / "data/final/dialogue.ass",
         sentence_map_json = BASE_DIR / "data/final/sentence_map.json",

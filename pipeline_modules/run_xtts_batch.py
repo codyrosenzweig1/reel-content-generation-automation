@@ -1,7 +1,22 @@
 #!/usr/bin/env python3
 import json
+import torch
 from pathlib import Path
 from TTS.api import TTS
+from TTS.tts.configs.xtts_config import XttsConfig
+from TTS.tts.models.xtts import Xtts, XttsAudioConfig, XttsArgs
+from TTS.config.shared_configs import BaseDatasetConfig
+import torch.serialization
+
+import transformers, TTS as coqui_tts, torch
+try:
+    print("Transformers", transformers.__version__)
+    print("Coqui TTS", coqui_tts.__version__)
+    print("Torch", torch.__version__)
+except Exception:
+    pass
+
+torch.serialization.add_safe_globals([XttsConfig, XttsAudioConfig, Xtts, BaseDatasetConfig, XttsArgs])
 
 def run_xtts():
     """
@@ -32,7 +47,7 @@ def run_xtts():
     # Load model once with desired temperature
     print(f"🔊 Loading XTTS model: {TTS_MODEL}")
     tts = TTS(model_name=TTS_MODEL, progress_bar=True, gpu=False)
-    tts.to("cpu")
+    # The high level TTS API handles device internally when gpu=False
 
     # Process each generated script
     for script_path in sorted(SCRIPTS_DIR.glob("*.json")):
@@ -57,6 +72,8 @@ def run_xtts():
                 output_path = out_dir / filename
                 print(f"🎧 [{index:02d}] {name}: {line}")
                 try:
+                    # Ensure output directory exists
+                    output_path.parent.mkdir(parents=True, exist_ok=True)
                     tts.tts_to_file(
                         text=line,
                         speaker_wav=[str(p) for p in samples],
