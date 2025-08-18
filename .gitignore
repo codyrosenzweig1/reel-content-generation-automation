@@ -95,3 +95,7 @@ npm-debug.log*
 .vscode/
 
 xtts/
+venv-align/
+venv-core/
+venv-xtts/
+venv-core/
