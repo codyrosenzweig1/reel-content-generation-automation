@@ -44,36 +44,31 @@ def main():
     openai.api_key = api_key
 
     # Generate and save the dialogue script using your script_generator module
-    # print(f"Generating dialogue script for topic '{topic}' with tone '{tone}'...")
-    # script_path = generate_script(topic, tone, account)
-    # print(f"Saved script to {script_path}")
+    print(f"Generating dialogue script for topic '{topic}' with tone '{tone}'...")
+    script_path = generate_script(topic, tone, account)
+    print(f"Saved script to {script_path}")
 
-    # Run batch XTTS conversion
-    print("Starting XTTS batch conversion...")
-    # run_xtts()
+    print("Starting XTTS batch conversion… (skipped in this run)")
+    run_xtts()
     print("XTTS conversion completed.")
 
-    # Run batch RVC conversion
-    print("Starting RVC batch conversion...")
+    print("Starting RVC batch conversion… (skipped in this run)")
     # batch_convert()
     print("RVC conversion completed.")
 
-    # Generate out word and sentence timings to generate captions and png timings
-    # print("Generating timing maps...")
-    # generate_timing_maps(topic)
+    print("Generating timing maps… (with phoneme alignment if available)")
+    generate_timing_maps(topic, phoneme_align=True)
 
-    # Combine all converted audio files into a single output WAV + speed up 
-    # combine_wavs(CONVERTED_DIR, BASE_DIR / "data/final/final_output.wav")
+    print("Combining audio tracks into final_output.wav…")
+    combine_wavs(CONVERTED_DIR, BASE_DIR / "data/final/final_output.wav")
 
-    # Generating word timings for intelligent subtitles
     print("Generating ASS subtitles for word highlights…")
-    # generate_ass_subtitles(
-    #     BASE_DIR / "data/final/word_timestamps.json",
-    #     BASE_DIR / "data/final/dialogue.ass"
-    # )
+    generate_ass_subtitles(
+        BASE_DIR / "data/final/word_timestamps.json",
+        BASE_DIR / "data/final/dialogue.ass"
+    )
 
-    # Combining audio, mp4, subtitiles, png's
-    print("Assembling reel....")
+    print("Assembling reel…")
     assemble_reel(
         BASE_DIR / "data/backgrounds/bg_full.mp4",
         BASE_DIR / "data/final/final_output.wav",

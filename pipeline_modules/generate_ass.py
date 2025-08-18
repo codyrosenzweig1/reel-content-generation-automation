@@ -24,12 +24,12 @@ def seconds_to_ass(t: float) -> str:
 
 def build_ass_from_whisperx(word_json_path: Path, ass_out_path: Path, window_size: int = 4):
     # Tunables for timing feel
-    LEAD_SEC = 0.08
-    COMPRESS = 0.88
+    LEAD_SEC = 0.04
+    COMPRESS = 0.95
     COMMA_GAP = 0.16
     FULLSTOP_GAP = 0.32
     PUNCT_SHOW_CAP = 0.14
-    SAFETY_MARGIN = 0.02
+    SAFETY_MARGIN = 0.01
 
     data = json.loads(word_json_path.read_text())
     # Optional sentence map to recover exact sentence-ending punctuation like ? and !
@@ -107,7 +107,10 @@ def build_ass_from_whisperx(word_json_path: Path, ass_out_path: Path, window_siz
             end_f = float(end)
         except Exception:
             continue
-        normalised_words.append({"text": text, "start": start_f, "end": end_f, "punct": w.get("punct", "")})
+        item = {"text": text, "start": start_f, "end": end_f, "punct": w.get("punct", "")}
+        if isinstance(w.get("phonemes"), list):
+            item["phonemes"] = w["phonemes"]
+        normalised_words.append(item)
 
     # Ensure chronological order
     normalised_words.sort(key=lambda x: x["start"]) 
@@ -138,14 +141,29 @@ def build_ass_from_whisperx(word_json_path: Path, ass_out_path: Path, window_siz
     # Precompute adjusted timings with per‑word lead and compression
     adjusted = []
     for idx, w in enumerate(normalised_words):
-        s = max(0.0, w["start"] - LEAD_SEC)
-        dur = max(0.0, w["end"] - w["start"]) * COMPRESS
+        base_start = float(w["start"])
+        base_end = float(w["end"])
+        ph = w.get("phonemes") if isinstance(w.get("phonemes"), list) else []
+        if ph:
+            try:
+                ph_start = float(ph[0].get("start", base_start))
+                ph_end = float(ph[-1].get("end", base_end))
+                base_start, base_end = ph_start, ph_end
+            except Exception:
+                pass
+        s = max(0.0, base_start - LEAD_SEC)
+        dur = max(0.0, base_end - base_start) * COMPRESS
         e = s + dur
-        # Constrain so it never pushes past the next word hard start minus a safety margin
         if idx + 1 < len(normalised_words):
-            next_s = normalised_words[idx + 1]["start"] - LEAD_SEC
+            next_s = float(normalised_words[idx + 1]["start"]) - LEAD_SEC
             e = min(e, max(s, next_s - SAFETY_MARGIN))
-        adjusted.append({"text": w["text"], "start": s, "end": e, "punct": w.get("punct", "")})
+        adjusted.append({
+            "text": w["text"],
+            "start": s,
+            "end": e,
+            "punct": w.get("punct", ""),
+            "phonemes": ph,
+        })
 
     lines = [ASS_HEADER]
 

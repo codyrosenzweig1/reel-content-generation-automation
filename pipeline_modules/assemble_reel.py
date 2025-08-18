@@ -4,6 +4,7 @@ import subprocess
 from pathlib import Path
 
 LEFT_SPKRS = {"peter"}          # speakers whose PNG appears left
+BOTTOM_MARGIN = 80  # pixels from bottom; was effectively 300 via hardcoded y
 
 def _probe_duration(video: Path) -> float:
     out = subprocess.check_output(
@@ -60,7 +61,7 @@ def assemble_reel(
         fc_parts.append(
             f"[{inp}:v]scale=iw*0.20:-1[{label_scale}];"
             f"[{last_label}][{label_scale}]overlay="
-            f"x={x_pos}:y=H-h-300:enable='between(t,{start},{end})'"
+            f"x={x_pos}:y=H-h-{BOTTOM_MARGIN}:enable='between(t,{start},{end})'"
             f"[{label_out}]"
         )
         last_label = label_out

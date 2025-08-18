@@ -131,7 +131,8 @@ class ScriptGenerator:
 
 #if __name__ == "__main__":
 def script_generator(topic, tone, account="default_account"):
-    load_dotenv(dotenv_path=".env")
+    from pathlib import Path
+    load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
     api_key = os.getenv("OPENAI_API_KEY")
 
     # Initialise the generator

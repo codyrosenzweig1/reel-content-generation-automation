@@ -16,7 +16,14 @@ try:
 except Exception:
     pass
 
-torch.serialization.add_safe_globals([XttsConfig, XttsAudioConfig, Xtts, BaseDatasetConfig, XttsArgs])
+
+# Register XTTS classes for safe deserialisation when supported by PyTorch
+_add_safe_globals = getattr(torch.serialization, "add_safe_globals", None)
+if _add_safe_globals is not None:
+    _add_safe_globals([XttsConfig, XttsAudioConfig, Xtts, BaseDatasetConfig, XttsArgs])
+else:
+    # PyTorch versions prior to 2.3 do not provide add_safe_globals
+    pass
 
 def run_xtts():
     """
