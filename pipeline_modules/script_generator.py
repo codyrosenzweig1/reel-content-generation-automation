@@ -44,7 +44,7 @@ class ScriptGenerator:
         with open(path, "r") as file:
             return file.read()
     
-    def generate_script(self, topic, tone="humorous", account="default_account"):
+    def generate_script(self, topic, tone="educational", account="default_account"):
         """
         Generates the dialogue script using GPT
         

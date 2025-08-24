@@ -17,6 +17,11 @@ MODEL_DIR    = BASE_DIR / "weights"
 INDEX_DIR    = MODEL_DIR / "indexes"
 USE_INDEX    = True
 
+F0_METHOD    = os.getenv("F0_METHOD", "rmvpe")   # best quality; keep by default
+RESAMPLE_SR  = int(os.getenv("RVC_RESAMPLE_SR", "0"))   # 0 = keep original SR for quality
+PER_FILE_GC  = True
+SKIP_IF_EXISTS = os.getenv("SKIP_IF_EXISTS", "1") == "1"  # skip already-converted clips
+
 def get_speaker_name(fp: Path) -> str:
     # filename must be <index>_<Speaker>.wav
     parts = fp.stem.split("_")
@@ -55,26 +60,52 @@ def convert(vc: VC, file_path: Path, output_path: Path):
     output_path.parent.mkdir(parents=True, exist_ok=True)
     logging.info(f"🎙️ Converting {file_path.name} → {output_path.name}")
 
-    f0_method   = "rmvpe"
+    f0_method   = F0_METHOD
     index_file  = str(idx_file) if idx_file and idx_file.exists() else None
 
-    tgt_sr, audio_opt, _, err = vc.vc_inference(
-        sid=0,
-        input_audio_path=str(file_path),
-        f0_method=f0_method,
-        f0_up_key=0,
-        index_file=index_file,
-        index_rate=0.95,
-        filter_radius=3,
-        resample_sr=0,
-        rms_mix_rate=0.4,
-        protect=0.4,
-    )
+    try:
+        with torch.inference_mode():
+            tgt_sr, audio_opt, _, err = vc.vc_inference(
+                sid=0,
+                input_audio_path=str(file_path),
+                f0_method=f0_method,
+                f0_up_key=0,
+                index_file=index_file,
+                index_rate=0.95,
+                filter_radius=3,
+                resample_sr=RESAMPLE_SR,
+                rms_mix_rate=0.4,
+                protect=0.4,
+            )
+    except RuntimeError as e:
+        logging.error(f"❌ RuntimeError during inference on {file_path.name}: {e}")
+        return
+    except Exception as e:
+        logging.error(f"❌ Unexpected error during inference on {file_path.name}: {e}")
+        return
+
     if err:
         logging.warning(f"⚠️ Error converting {file_path.name}: {err}")
         return
-    sf.write(str(output_path), audio_opt, tgt_sr)
-    logging.info(f"✅ Saved: {output_path}")
+
+    try:
+        sf.write(str(output_path), audio_opt, tgt_sr)
+        logging.info(f"✅ Saved: {output_path}")
+    finally:
+        if PER_FILE_GC:
+            try:
+                del audio_opt
+            except Exception:
+                pass
+            try:
+                del tgt_sr
+            except Exception:
+                pass
+            gc.collect()
+            try:
+                torch.cuda.empty_cache()
+            except Exception:
+                pass
 
 def batch_convert():
     logging.info(f"🔍 Scanning base files in {INPUT_DIR}")
@@ -88,7 +119,18 @@ def batch_convert():
         vc = load_model(speaker)
         for fp in files:
             out_fp = OUTPUT_DIR / fp.name
+            if SKIP_IF_EXISTS and out_fp.exists():
+                logging.info(f"⏩ Skipping already converted: {out_fp.name}")
+                continue
             convert(vc, fp, out_fp)
+
+            # cleanup per file
+            if PER_FILE_GC:
+                gc.collect()
+                try:
+                    torch.cuda.empty_cache()
+                except Exception:
+                    pass
 
         # cleanup
         del vc
