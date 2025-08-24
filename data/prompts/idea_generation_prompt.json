@@ -1,0 +1,53 @@
+{
+  "name": "idea_generation_prompt",
+  "version": "1.0.0",
+  "description": "Prompt spec for generating short form video topics in Australian English. Optimised for ChatGPT ingestion and our XTTS and RVC pipeline.",
+  "constraints": [
+    "Australian English spelling and phrasing",
+    "Each topic 6 to 12 words",
+    "No emojis",
+    "Do not number items",
+    "Concise and engaging phrasing",
+    "Avoid difficult words or acronyms because audio goes through XTTS and RVC",
+    "Topics must be self contained and suitable for 60 to 90 second reels",
+    "Respect provided tone and style"
+  ],
+  "output_format": {
+    "type": "json_schema",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "topics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topic": {"type": "string"},
+              "tone": {"type": "string"},
+              "style": {"type": "string"}
+            },
+            "required": ["topic", "tone"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["topics"],
+      "additionalProperties": false
+    }
+  },
+  "variables": {
+    "n": {"type": "integer", "min": 1, "max": 100},
+    "account": {"type": "string"},
+    "tone": {"type": "string"},
+    "style": {"type": "string"},
+    "seed": {"type": "string"}
+  },
+  "system_prompt": "You are an assistant that writes short, specific topics for Instagram Reels and YouTube Shorts in Australian English. Keep each topic 6 to 12 words. No emojis. Do not number items. Write concise, engaging lines that stand alone. Avoid difficult words or acronyms because the audio will be converted with XTTS and RVC. Reflect both the provided tone and style.",
+  "user_prompt_template": "Create {n} distinct content topics for the account category '{account}'. Audience is general interest. Tone must be '{tone}'. Style must be '{style}'. Use this seed direction to inspire variety: {seed}. Return only diverse and self contained topics suitable for 60 to 90 second reels.",
+  "example": {
+    "topics": [
+      {"topic": "Why plants love sunlight more than snacks", "tone": "curious", "style": "Educational with a slightly humorous, engaging delivery"},
+      {"topic": "How ancient Rome shaped early fast food culture", "tone": "storytelling", "style": "Educational with a slightly humorous, engaging delivery"}
+    ]
+  }
+}

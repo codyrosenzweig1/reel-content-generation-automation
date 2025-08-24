@@ -2,10 +2,11 @@
 import argparse
 import json
 import subprocess
+import os
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-QUEUE_DIR = REPO_ROOT / "queues"
+QUEUE_DIR = REPO_ROOT / "data" / "queues"
 
 def dequeue(queue_name: str) -> dict | None:
     f = QUEUE_DIR / f"{queue_name}.json"
@@ -31,11 +32,16 @@ def main():
     topic = job["topic"]
     tone = job.get("tone", "neutral")
     account = job["account"]
-    print(f"Running job: {topic} for {account} tone {tone}")
+    style = job.get("style", tone)
+    priority = job.get("priority", 5)
+    print(f"Running job: {topic} for {account} tone {tone} style {style} priority {priority}")
 
     # Use the new Python orchestrator
     cmd = ["python", str(REPO_ROOT / "scripts" / "run_pipeline.py"), topic, tone, account]
-    subprocess.run(cmd, check=True)
+    env = os.environ.copy()
+    env["PIPELINE_STYLE"] = str(style)
+    env["PIPELINE_PRIORITY"] = str(priority)
+    subprocess.run(cmd, check=True, env=env)
 
 if __name__ == "__main__":
     main()

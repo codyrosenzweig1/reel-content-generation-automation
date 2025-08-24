@@ -1,0 +1,98 @@
+TASK:
+Generate a humorous, intuitive, and in-depth dialogue between two fictional characters explaining the following topic to university students.
+Avoid difficult words or acronyms since output will be processed with XTTS and RVC voice conversion.
+
+AUDIENCE:
+University students with minimal prior knowledge of the topic but strong curiosity.
+
+STYLE & FLOW:
+1. Start with a humorous and relatable hook to grab attention.
+2. Introduce the topic in simple terms.
+3. Provide a deeper, intuitive explanation of how or why it works.
+   - Use clear analogies, relatable examples, or comparisons where possible.
+   - Keep it technically accurate, but light and fun.
+4. End with a funny or memorable punchline that leaves the student with a clear takeaway, optimised for clear pronunciation by XTTS and RVC.
+
+LENGTH:
+Keep the total dialogue short enough for ~90 seconds of speech. Aim for 10–14 alternating turns of dialogue.
+
+FORMAT:
+The dialogue must alternate between Peter and Stewie, starting with Peter. Each character’s turn can be one or more sentences. Sometimes, one character may take multiple turns in a row if needed to explain their point more clearly. Each turn can include multiple sentences.
+
+Example:
+
+Peter: "Introductory explanation, can be a few sentences."
+Stewie: "Funny or curious response, a few sentences."
+Peter: "Clarification or correction, still light and clear."
+Peter: "Sometimes I might add a bit more to make things clearer."
+Stewie: "Follow-up, playful or confused."
+Stewie: "And maybe one more thought to keep it fun."
+...
+Continue alternating until 10–14 total turns (approx. 90 seconds of dialogue).
+
+Return the final output as valid JSON structured like this:
+{
+  "topic": "[TOPIC]",
+  "tone": "[TONE]",
+  "characters": [
+    {"name": "Peter", "lines": ["Full first turn", "Second turn", ...]},
+    {"name": "Stewie", "lines": ["First response", "Second response", ...]}
+  ]
+}
+
+EXAMPLES:
+Example 1:
+{
+  "topic": "Photosynthesis",
+  "tone": "humorous",
+  "characters": [
+    {"name": "Peter", "lines": ["Stewie, did you know plants actually eat sunlight like it’s their favorite snack? It’s true! They basically have a solar buffet going on in their leaves.", "They use something called chlorophyll, which is like a tiny green chef, to grab sunlight and start cooking."]},
+    {"name": "Stewie", "lines": ["Wait, plants eat light? That sounds like magic. Do they have little forks and knives too?", "Or maybe they just slurp it up like spaghetti?"]},
+    {"name": "Peter", "lines": ["Not quite, Stewie. Chlorophyll catches sunlight and uses it to mix air and water, turning them into sugar. It’s like a kitchen powered by sunshine.", "The sugar is their food, and the leftover is oxygen, which they kindly give us as a gift."]},
+    {"name": "Stewie", "lines": ["So they don’t need soil snacks or water snacks? Just sunlight and some air? That’s like surviving on pizza and soda alone!", "I wish I could photosynthesize instead of doing homework."]},
+    {"name": "Peter", "lines": ["Exactly! Imagine standing outside soaking up the sun and getting all your energy. No more snacks, no more homework stress.", "Plants are basically tiny solar-powered candy makers."]},
+    {"name": "Stewie", "lines": ["Wow, so plants are the ultimate snack machines. I want to be a plant when I grow up!", "Maybe then I’d never have to clean my room."]},
+    {"name": "Peter", "lines": ["And the best part? They keep the air fresh for us. So every time you breathe, thank a plant.", "They’re like green superheroes saving the day silently."]},
+    {"name": "Stewie", "lines": ["Green superheroes, huh? I like that! Maybe I should wear a cape and photosynthesize too.", "That’d be the coolest superpower ever."]}  
+  ]
+}
+
+Example 2:
+{
+  "topic": "Inflation",
+  "tone": "humorous",
+  "characters": [
+    {"name": "Peter", "lines": ["Stewie, imagine your money is a balloon that slowly loses air over time. It’s like your dollars are shrinking right before your eyes.", "Prices for things like food and games go up, so your money doesn’t stretch as far as it used to."]},
+    {"name": "Stewie", "lines": ["So my dollars are shrinking like my patience for chores? That’s terrible!", "Why can’t money just stay the same size forever?"]},
+    {"name": "Peter", "lines": ["Sometimes it happens because there’s too much money floating around, like too many balloons at a party.", "Other times, when it costs more to make stuff, companies charge more to keep up."]},
+    {"name": "Stewie", "lines": ["Do people try to stop this balloon from losing air? Like, can they patch it up?", "Or do we just have to watch it slowly deflate?"]},
+    {"name": "Peter", "lines": ["It’s tricky. It’s like if pizza slices got smaller but the price stayed the same. You get less pizza for your money.", "So, saving money is like saving pizza slices. You want to keep as many as possible!"]},
+    {"name": "Stewie", "lines": ["Maybe I should start saving pizza slices instead of dollars. At least pizza tastes better.", "I’m all in for pizza economics!"]},
+    {"name": "Peter", "lines": ["Exactly! Keep your snack budget safe, and you’ll be happier.", "Inflation might be sneaky, but with some smarts, you can beat it."]},
+    {"name": "Stewie", "lines": ["I think I’ll become a pizza economist. It sounds way tastier than regular economics.", "And way less boring!"]}  
+  ]
+}
+
+Example 3:
+{
+  "topic": "Quantum Entanglement",
+  "tone": "humorous",
+  "characters": [
+    {"name": "Peter", "lines": ["Stewie, have you heard about quantum entanglement? It’s like having a secret twin who knows what you’re thinking instantly.", "These particles are connected in a way that if you check one, the other one immediately knows."]},
+    {"name": "Stewie", "lines": ["So these particles are like best friends with superpowers? That sounds like sci-fi!", "Can they talk to each other faster than light?"]},
+    {"name": "Peter", "lines": ["Sort of! If you check one particle’s spin, the other one instantly knows what it is, no matter how far apart they are.", "It’s like they share a secret code that no one else can crack."]},
+    {"name": "Stewie", "lines": ["Is this how spies send secret messages? I want to be a quantum spy!", "Imagine finishing homework by just looking at your twin’s answers."]},
+    {"name": "Peter", "lines": ["They don’t send messages, it’s more like magic connection. Scientists still find it super weird and amazing.", "It breaks all the normal rules of how we think the world works."]},
+    {"name": "Stewie", "lines": ["I want a twin like that for my homework. It’d be the ultimate cheat code.", "Maybe one day we’ll use it to make teleportation or instant messaging better."]},
+    {"name": "Peter", "lines": ["Imagine if you could finish your homework just by looking at your twin’s answers! No more late nights.", "Quantum entanglement is like the universe’s coolest secret handshake."]},
+    {"name": "Stewie", "lines": ["That’s the kind of science I can get behind. Secret handshakes and magic twins!", "Sign me up!"]}  
+  ]
+}
+
+---
+
+TASK INPUT:
+Topic: [INSERT TOPIC HERE]  
+Tone: [INSERT TONE HERE, e.g., 'humorous']
+
+Now, generate the dialogue following the instructions above.
